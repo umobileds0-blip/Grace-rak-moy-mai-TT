@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รักเค้ามั้ย?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fcd5df;
+            font-family: 'Prompt', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 450px;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        h1 {
+            color: #4a3b3c;
+            font-size: 26px;
+            margin-bottom: 40px;
+            min-height: 50px;
+            font-weight: 600;
+            z-index: 10;
+        }
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100px;
+        }
+        .btn-primary {
+            background-color: #ff3366;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);
+            font-weight: 600;
+            transition: transform 0.2s ease;
+            font-family: 'Prompt', sans-serif;
+            z-index: 20;
+            white-space: nowrap;
+        }
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+        .btn-secondary {
+            background-color: white;
+            color: #666;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: 600;
+            transition: transform 0.2s ease, left 0.3s ease, top 0.3s ease;
+            font-family: 'Prompt', sans-serif;
+            z-index: 15;
+            white-space: nowrap;
+            position: relative;
+        }
+        .cat-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            animation: wiggle 1.2s infinite ease-in-out;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cat-img:hover {
+            transform: scale(1.05);
+        }
+        .letter-card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            animation: popUp 0.4s ease;
+        }
+        @keyframes popUp {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes wiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-8deg); }
+            75% { transform: rotate(8deg); }
+            100% { transform: rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <h1 id="questionText">รักเค้ามั้ย? 🤨</h1>
+        <div class="btn-group" id="btnGroup">
+            <button class="btn-primary" id="yesBtn" onclick="clickYes()">รัก</button>
+            <button class="btn-secondary" id="noBtn" onclick="clickNo()">ไม่รัก</button>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let scaleFactor = 1;
+        let noScaleFactor = 1;
+
+        const questions = [
+            "รักเค้ามั้ย? 🤨",
+            "แน่ใจเหรอว่าไม่รัก? 🥺",
+            "คิดดีๆอีกทีสิอ้วน 😑",
+            "จะใจร้ายจริงๆหรอ 🥹",
+            "เค้าจะงอนแล้วนะ 🙃",
+            "กดรักได้แล้วววววว 😟"
+        ];
+
+        function changeContentWithFade(updateCallback) {
+            const container = document.getElementById('app');
+            container.classList.add('fade-out');
+            setTimeout(() => {
+                updateCallback();
+                container.classList.remove('fade-out');
+            }, 250);
+        }
+
+        function clickNo() {
+            clickCount++;
+            
+            scaleFactor += 0.25;
+            const yesBtn = document.getElementById('yesBtn');
+            yesBtn.style.transform = `scale(${scaleFactor})`;
+
+            if (scaleFactor >= 3.5) {
+                yesBtn.style.position = "fixed";
+                yesBtn.style.width = "100vw";
+                yesBtn.style.height = "100vh";
+                yesBtn.style.borderRadius = "0";
+                yesBtn.style.zIndex = "50";
+            }
+
+            noScaleFactor = Math.max(0.3, noScaleFactor - 0.12);
+            const noBtn = document.getElementById('noBtn');
+
+            const safePositions = [
+                { top: "-180px", left: "0px" },
+                { top: "180px", left: "0px" },
+                { top: "-100px", left: "-140px" },
+                { top: "-100px", left: "140px" },
+                { top: "100px", left: "-140px" },
+                { top: "100px", left: "140px" }
+            ];
+            
+            const randomPos = safePositions[Math.floor(Math.random() * safePositions.length)];
+            noBtn.style.position = 'absolute';
+            noBtn.style.top = randomPos.top;
+            noBtn.style.left = `calc(50% + ${randomPos.left})`;
+            noBtn.style.transform = `translateX(-50%) scale(${noScaleFactor})`;
+
+            const title = document.getElementById('questionText');
+            if (clickCount < questions.length) {
+                title.innerText = questions[clickCount];
+            } else {
+                title.innerText = "หนีไม่พ้นแล้ว กดรักซะดีๆ";
+            }
+        }
+
+        function clickYes() {
+            const container = document.getElementById('app');
+            
+            changeContentWithFade(() => {
+                document.body.style.backgroundColor = "#ff2a5f";
+                container.innerHTML = `<h1 style="color: white; font-size: 34px;">รักอ้วนทีสุดดเยยยยย</h1>`;
+            });
+
+            setTimeout(() => {
+                changeContentWithFade(() => {
+                    document.body.style.backgroundColor = "#ffc0cb";
+                    container.innerHTML = `
+                        <img src="https://files.catbox.moe/s0vpra.jpg" alt="Love Image" class="cat-img" onclick="openLetter()">
+                        <h1 style="font-size: 20px; color: #4a3b3c; line-height: 1.6;">
+                            ถ้าอ้วนเปิดมาถึงตรงนี้ก็แปลว่าอ้วนพักงานแล้ว<br>
+                            <span style="font-size: 16px; color: #e91e63; cursor: pointer;" onclick="openLetter()">ลองกดที่รูปแมวดูนะอ้วน 💖</span>
+                        </h1>
+                    `;
+                });
+            }, 1800);
+        }
+
+        function openLetter() {
+            const container = document.getElementById('app');
+            changeContentWithFade(() => {
+                document.body.style.backgroundColor = "#ffb6c1";
+                container.innerHTML = `
+                    <div class="letter-card">
+                        <h2 style="color: #ff3366; margin-top: 0; font-size: 24px;">ถึงคนเก่งของเค้า</h2>
+                        <p style="color: #555; font-size: 16px; line-height: 1.9; margin: 20px 0;">
+                            ถ้าอ้วนเปิดมาเจอจดหมายฉบับนี้แปลว่าอ้วนน่าจะกำลังเหนื่อยๆหรือพักเบรกจากงานอยู่แน่ๆ ใช่ไหมครับ​เค้าแค่อยากมาเตือนความจำอ้วนว่าอ้วนเก่งมากๆเลยนะที่อดทนและตั้งใจทำงานหนักขนาดนี้ เค้าภูมิใจในตัวอ้วนเสมอเลยยรู้ว่าบางทีงานกะดึกมันทั้งเหนื่อยทั้งง่วงทั้งล้าแต่เค้าคอยส่งกำลังใจก้อนใหญ่มากๆไปให้อ้วนอยู่ตรงนี้เสมอนะ​อย่าลืมดื่มน้ำเยอะๆหาของอร่อยๆทานช่วงพักเบรกแล้วก็อย่าหักโหมจนเกินไปน้าสู้ๆนะครับคนเก่งอีกแป๊บเดียวก็ได้เลิกงานไปพักผ่อนแล้ว<br>
+                            เลิกงานแล้วเดินทางกลับห้องปลอดภัยนะครับเค้าจะอยู่ตรงนี้จะคอยส่งกำลังใจให้อ้วนเสมอ<br><br>
+                            <b style="color: #ff3366; font-size: 20px;">"ถ้าอ้วนอ่านจบแล้วสองนิ้วยิ้มหวานให้เค้าดูหน่อยถือว่าเป็นรางวัลเนอะ😋"</b>
+                        </p>
+                    </div>
+                `;
+            });
+        }
+    </script>
+
+</body>
+</html>
